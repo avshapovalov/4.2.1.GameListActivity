@@ -38,21 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new GameListAdapter(this, gameList);
         listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showItemData(position);
-            }
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.removeItem(position);
-                return true;
-            }
-        });
     }
 
 
@@ -69,12 +54,4 @@ public class MainActivity extends AppCompatActivity {
                 android.R.drawable.ic_menu_call));
     }
 
-    private void showItemData(int position) {
-        Game itemData = adapter.getItem(position);
-        Toast.makeText(MainActivity.this,
-                "Name: " + itemData.getName() + "\n" +
-                        "Version: " + itemData.getVersion() + "\n" +
-                        "Checked: " + itemData.isChacked(),
-                Toast.LENGTH_SHORT).show();
-    }
 }

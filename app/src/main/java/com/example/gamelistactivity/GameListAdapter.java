@@ -5,10 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,36 +65,45 @@ public class GameListAdapter extends BaseAdapter {
         return position;
     }
 
-    // Самый интересный обязательный метод.
-    // Создает или возвращает переиспользуемый View, с новыми данными
-    // для конкретной позиции. BaseAdapter – хитрый класс,
-    // он не держит в памяти все View - это дорого и будет тормозить.
-    // Поэтому он рисует только то что видно. Для этого есть convertView.
-    // Если нет чего переиспользовать, то создается новый View.
-    // А потом напоняет старую или новую View нужными данными.
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
             view = inflater.inflate(R.layout.game_list_item, parent, false);
         }
 
-        Game game = games.get(position);
+        final Game game = games.get(position);
 
         ImageView image = view.findViewById(R.id.icon);
         TextView title = view.findViewById(R.id.title);
         TextView subtitle = view.findViewById(R.id.subtitle);
-        CheckBox checkBox = view.findViewById(R.id.checkbox);
+        Button deleteButton = view.findViewById(R.id.deleteButton);
 
         image.setImageDrawable(game.getImage());
         title.setText(game.getName());
         subtitle.setText(game.getVersion());
-        checkBox.setOnCheckedChangeListener(myCheckChangeList);
-        checkBox.setTag(position);
-        checkBox.setChecked(game.isChacked());
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                games.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+        deleteButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(v.getContext(),
+                        "Name: " + game.getName() + "\n" +
+                                "Version: " + game.getVersion() + "\n" +
+                                "Pressed: " + true,
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
         return view;
     }
-
 
 }
